@@ -319,6 +319,7 @@ void instrdecode() {
         uint8_t rs = (ifid_ir >> 21) & RSM;
         uint8_t rt = (ifid_ir >> 16) & RTM;
         uint8_t rd = (ifid_ir >> 11) & RDM;
+        // uint8_t sa = (ifid_ir >> 6) & SHAMTM;
         uint8_t funct = ifid_ir & FUNCTM;
         immregint_t imm = ifid_ir & IMMEDM;
         uint8_t control, aluop;

@@ -40,23 +40,23 @@
 #define MEMSTAGE 4
 #define WBSTAGE 5
 
-void loggernorm(uregint_t ir, uregint_t pc, regint_t *rf);
+void loggernorm(uregint_t ir, uregint_t pc, regint_t *rf, int loglevel);
 
-void loggerif(uregint_t ir, uregint_t pc, regint_t *rf, IFIDReg wrsv, EXMEMReg rdsv);
+void loggerif(uregint_t ir, uregint_t pc, regint_t *rf, IFIDReg wrsv, EXMEMReg rdsv, int loglevel);
 
-void loggerid(uregint_t ir, uregint_t pc, regint_t *rf, IDEXReg wrsv, IFIDReg rdsv);
+void loggerid(uregint_t ir, uregint_t pc, regint_t *rf, IDEXReg wrsv, IFIDReg rdsv, int loglevel);
 
-void loggerex(uregint_t ir, uregint_t pc, regint_t *rf, EXMEMReg wrsv, IDEXReg rdsv);
+void loggerex(uregint_t ir, uregint_t pc, regint_t *rf, EXMEMReg wrsv, IDEXReg rdsv, int loglevel);
 
-void loggermem(uregint_t ir, uregint_t pc, regint_t *rf, MEMWBReg wrsv, EXMEMReg rdsv);
+void loggermem(uregint_t ir, uregint_t pc, regint_t *rf, MEMWBReg wrsv, EXMEMReg rdsv, int loglevel);
 
-void loggerwb(uregint_t ir, uregint_t pc, regint_t *rf, IFIDReg wrsv, MEMWBReg rdsv);
+void loggerwb(uregint_t ir, uregint_t pc, regint_t *rf, IFIDReg wrsv, MEMWBReg rdsv, int loglevel);
 
 void instructioninfo(uregint_t ir, regint_t *rf, char *stage);
 
 void controlsignalsprint(uint8_t control, uint8_t printmask);
 
-void logger(uregint_t ir, uregint_t pc, regint_t *rf, int stage, IFIDReg *ifid, IDEXReg *idex, EXMEMReg *exmem, MEMWBReg *memwb);
+void logger(uregint_t ir, uregint_t pc, regint_t *rf, int stage, IFIDReg *ifid, IDEXReg *idex, EXMEMReg *exmem, MEMWBReg *memwb, int loglevel);
 
 void logerr(uregint_t ir, uregint_t pc, regint_t *rf, int stage, IFIDReg *ifid, IDEXReg *idex, EXMEMReg *exmem, MEMWBReg *memwb);
 
