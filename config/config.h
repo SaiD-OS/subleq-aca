@@ -1,3 +1,6 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -81,3 +84,5 @@ typedef struct {
     regint_t memData, aluOut; 
     uint8_t control, destReg;
 } MEMWBReg;
+
+#endif

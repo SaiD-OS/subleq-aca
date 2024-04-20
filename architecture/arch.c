@@ -1,5 +1,17 @@
 #include "arch.h"
 
+#if ARCH != MIPS
+    #include "subleqreg.h"
+#endif
+
+#if ARCH == SUBLEQB
+    #include "subleqmem.h"
+#endif
+
+#if BENCHMARK == 1
+    #include "../benchmarks/fibo.h"
+#endif
+
 //logging params
 int stage = 0;
 bool executeSubleq = false;
@@ -430,8 +442,7 @@ void preparenextcycle() {
     pc = pcnext;
 }
 
-int main() {
-
+void mipsexecution() {
     size_t instrcnt = sizeof(IM);
     
     initregandmem();
@@ -446,12 +457,4 @@ int main() {
         //update the stage registers
         preparenextcycle();
     }
-
-    printf("The Fibonacci numbers are:\n");
-	for (int i = 0; i < 8; i++) {
-        int data = readDMM(MEM_SIZE-(4*i), true);
-		printf("%d, ", data);
-	}
-
-    return 0;
 }

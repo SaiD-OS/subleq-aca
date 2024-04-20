@@ -1,3 +1,7 @@
+#ifndef ARCH_H
+#define ARCH_H
+
+#include "../config/config.h"
 #include "../monitor/monitor.h"
 #include <stdbool.h>
 
@@ -34,18 +38,6 @@
 #define SRC1REG 0x0000001F
 #define SRC2REG 0x0000001F
 #define BRANCHVAL 0x0000FFFF
-
-#if BENCHMARK == 1
-    #include "../benchmarks/fibo.h"
-#endif
-
-#if ARCH != MIPS
-    #include "subleqreg.h"
-#endif
-
-#if ARCH == SUBLEQB
-    #include "subleqmem.h"
-#endif
 
 void readRegfile(uint8_t reg1Loc,  uint8_t reg2Loc, regint_t *reg1Val, regint_t *reg2Val);
 
@@ -118,3 +110,7 @@ void setsubleqsource(regint_t src1, regint_t src2, bool regwrite);
 regint_t getsubleqresult();
 
 void executesubleqinstr();
+
+void mipsexecution();
+
+#endif

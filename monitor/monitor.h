@@ -1,3 +1,6 @@
+#ifndef MONITOR_H
+#define MONITOR_H
+
 #include "../config/config.h"
 #include <stdbool.h>
 
@@ -62,3 +65,5 @@ void logperf(uregint_t ir, uregint_t pc, regint_t *rf, int stage, IFIDReg *ifid,
 void loginfo(uregint_t ir, uregint_t pc, regint_t *rf, int stage, IFIDReg *ifid, IDEXReg *idex, EXMEMReg *exmem, MEMWBReg *memwb);
 
 void logdebug(uregint_t ir, uregint_t pc, regint_t *rf, int stage, IFIDReg *ifid, IDEXReg *idex, EXMEMReg *exmem, MEMWBReg *memwb);
+
+#endif

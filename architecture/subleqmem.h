@@ -1,3 +1,6 @@
+#ifndef SUBLEQMEM_H
+#define SUBLEQMEM_H
+
 uregint_t subleqmem[] = {
 0x00, 0x80, 0x00, 0x04,//0
 0x00, 0xA0, 0x00, 0x08,//4
@@ -57,6 +60,8 @@ uregint_t subleqmem[] = {
 0x01, 0x06, 0x00, 0xE0,//DC
 0x00, 0x00, 0x00, 0xD0//E0
 };
+
+#endif
 
 
 // Address Calculation => offset + (X-1)*4 where X is LX
