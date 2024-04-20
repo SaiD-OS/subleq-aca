@@ -1,4 +1,4 @@
-#include "entrypoint.h"
+#include "arch.h"
 
 #ifdef PROFILE
 unsigned int instructioncount = 0, rtype = 0, itype = 0, jtype = 0, arithmetic = 0, branch = 0;

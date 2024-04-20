@@ -44,7 +44,7 @@ void instructioninfo(uregint_t ir, regint_t *rf, char *stage) {
     #endif
 }
 
-void loggernorm(uregint_t ir, uregint_t pc, regint_t *rf, int loglevel) {
+void loggernorm(uregint_t ir, uregint_t pc, regint_t *rf) {
     #ifdef MONITOR
     printf("Program Counter: %d\n", pc);
     #endif
@@ -103,7 +103,7 @@ void loggermem(uregint_t ir, uregint_t pc, regint_t *rf, MEMWBReg wrsv, EXMEMReg
     instructioninfo(ir, rf, "MEMStage");  
 }
 
-void loggerwb(uregint_t ir, uregint_t pc, regint_t *rf, IFIDReg wrsv, MEMWBReg rdsv, int loglevel) {
+void loggerwb(uregint_t ir, uregint_t pc, regint_t *rf, MEMWBReg rdsv, int loglevel) {
     #ifdef MONITOR
     printf("Program Counter: %d\n", pc);
     if(loglevel == 4) {
@@ -126,9 +126,9 @@ void logger(uregint_t ir, uregint_t pc, regint_t *rf, int stage, IFIDReg *ifid, 
     else if(stage == MEMSTAGE)
         loggermem(ir, pc, rf, memwb[PSWR], exmem[PSRD], loglevel);
     else if(stage == WBSTAGE)
-        loggerwb(ir, pc, rf, ifid[PSWR], memwb[PSRD], loglevel);
+        loggerwb(ir, pc, rf, memwb[PSRD], loglevel);
     else
-        loggernorm(ir, pc, rf, loglevel);
+        loggernorm(ir, pc, rf);
 }
 
 void logerr(uregint_t ir, uregint_t pc, regint_t *rf, int stage, IFIDReg *ifid, IDEXReg *idex, EXMEMReg *exmem, MEMWBReg *memwb) {

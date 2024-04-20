@@ -7,7 +7,7 @@
 #include <string.h>
 
 //Log level 1 - error, 2 - performance, 3 - info, 4 - debug
-#define LOGLEVEL 1
+#define LOGLEVEL 0
 
 // This will give the detailed information on instructions used
 #define MONITOR
@@ -57,7 +57,7 @@
 typedef uint8_t memunit;
 
 //load particular benchmark code i.e. instruction memory
-#define BENCHMARK 1
+#define BENCHMARK 0
 
 //Pipline stage write/read array index
 #define PSWR 0

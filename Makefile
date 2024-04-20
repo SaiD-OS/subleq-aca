@@ -28,9 +28,10 @@ LDFLAGS = $(addprefix -L , $(MINGW_GCC_LIB_DIR))
 TARGET = $(BIN_DIR)/subleq.exe
 
 SOURCES_WITH_HEADERS = $(ARCH)\arch.c \
-						$(LOGGER)\monitor.c \
-						$(ARCH)\entrypoint.c
-SOURCES = $(SOURCES_WITH_HEADERS)
+						$(LOGGER)\monitor.c 
+						
+SOURCES = $(ARCH)\entrypoint.c \
+			$(SOURCES_WITH_HEADERS)
 
 BENCHMARKS_HEADERS = $(BENCHMARKS)/fibo.h
 CONFIG_HEADERS= $(CONFIG)/config.h
@@ -50,12 +51,15 @@ $(OBJ_DIR)/%.o: %.c
 	$(GNUCC) $(CFLAGS) -c -o $@ $^
 
 #Phony
-.PHONY: all clean structure
+.PHONY: all clean dir run
 
 all: $(TARGET)
 
 clean: 
 	@$(RM) build /s /q
 
-structure:
+dir:
 	@$(MK) $(STRUCTURE_DIRS)
+
+run:
+	$(TARGET)

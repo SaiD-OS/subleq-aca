@@ -9,6 +9,34 @@
 #endif
 
 #if BENCHMARK == 1
+    #include "../benchmarks/adpcm.h"
+#elif BENCHMARK == 2
+    #include "../benchmarks/bf.h"
+#elif BENCHMARK == 3
+    #include "../benchmarks/bs.h"
+#elif BENCHMARK == 4
+    #include "../benchmarks/bubble.h"
+#elif BENCHMARK == 5
+    #include "../benchmarks/crc.h"
+#elif BENCHMARK == 6
+    #include "../benchmarks/fibcall.h"
+#elif BENCHMARK == 7
+    #include "../benchmarks/gsm.h"
+#elif BENCHMARK == 8
+    #include "../benchmarks/insertsort.h"
+#elif BENCHMARK == 9
+    #include "../benchmarks/intmm.h"
+#elif BENCHMARK == 10
+    #include "../benchmarks/jfdctint.h"
+#elif BENCHMARK == 11
+    #include "../benchmarks/matmul.h"
+#elif BENCHMARK == 12
+    #include "../benchmarks/mpeg2.h"
+#elif BENCHMARK == 13
+    #include "../benchmarks/pbmsrch_large.h"
+#elif BENCHMARK == 14
+    #include "../benchmarks/vec_add.h"
+#else
     #include "../benchmarks/fibo.h"
 #endif
 
@@ -19,10 +47,10 @@ bool executeSubleq = false;
 uregint_t pc, pcnext, subleqpc;
 regint_t regFile[REG_NUMS];
 
-IFIDReg *ifid = NULL; 
-IDEXReg *idex = NULL;
-EXMEMReg *exmem = NULL;
-MEMWBReg *memwb = NULL;
+IFIDReg ifid[2]; 
+IDEXReg idex[2];
+EXMEMReg exmem[2];
+MEMWBReg memwb[2];
 
 regint_t result = 0;
 
@@ -258,11 +286,9 @@ void loadsubleqsubroutine(uint8_t opc, uint8_t funct) {
         switch(funct) {
             case 32: subleqpc = 0; break;
         }
-        printf("Perform Add operation ");
     } else if (opc == ADDI_OP) {
         executeSubleq = true;
         subleqpc = 0;
-        printf("Perform Addi operation ");
     }
 }
 
@@ -305,7 +331,7 @@ void instrfetch() {
     pcnext = incrementPC(pc);
     writeIFIDStageReg(ir, pcnext, true);
     
-    logdebug(ir, pc, regFile, stage, ifid, idex, exmem, memwb);
+    logperf(ir, pc, regFile, stage, ifid, idex, exmem, memwb);
 }
 
 void instrdecode() {
@@ -333,7 +359,7 @@ void instrdecode() {
 
         signext = signExtn(imm);       
         writeIDEXStageReg(ifid_ir, regRs, regRt, signext, control, aluop, rt, rd, ifid_pc, true);
-        logdebug(ifid_ir, pc, regFile, stage, ifid, idex, exmem, memwb);
+        logperf(ifid_ir, pc, regFile, stage, ifid, idex, exmem, memwb);
         
     } else {
         writeIDEXStageReg(ifid_ir, 0, 0, 0, 0, 0, 0, 0, ifid_pc, true);
@@ -358,7 +384,6 @@ void execute() {
             op2 = idex_signext;
 
         if(executeSubleq) {
-            printf(" with the arguements: %d and %d\n", idex_regRs, op2);
             setsubleqsource(idex_regRs, op2, true);
             executesubleqsubroutine();
             aluout = getsubleqresult();
@@ -369,7 +394,7 @@ void execute() {
         }
         
         writeEXMEMStageReg(idex_ir, control, destReg, idex_regRt, aluout, branchaddress, true);
-        logdebug(idex_ir, pc, regFile, stage, ifid, idex, exmem, memwb);
+        logperf(idex_ir, pc, regFile, stage, ifid, idex, exmem, memwb);
     } else {
         writeEXMEMStageReg(idex_ir, 0, 0, idex_regRt, 0, 0, true);
     }
@@ -390,7 +415,7 @@ void memoryaccess() {
             pcnext = exmem_branchaddr;
         }
         writeMEMWBStageReg(exmem_ir, exmem_control, memout, exmem_aluout, exmem_destreg, true);
-        logdebug(exmem_ir, pc, regFile, stage, ifid, idex, exmem, memwb);
+        logperf(exmem_ir, pc, regFile, stage, ifid, idex, exmem, memwb);
     }  else {
         writeMEMWBStageReg(exmem_ir, exmem_control, 0, exmem_aluout, exmem_destreg, true);
     }
@@ -407,7 +432,7 @@ void writeback() {
         if(isSignal(memwb_control, MEMTOREGM))
             result_var = memwb_memdata;
         writeRegfile(memwb_destreg, result_var, isSignal(memwb_control, REGWRITEM));
-        logdebug(memwb_ir, pc, regFile, stage, ifid, idex, exmem, memwb);
+        logperf(memwb_ir, pc, regFile, stage, ifid, idex, exmem, memwb);
     }
 }
 
@@ -417,16 +442,12 @@ void initregandmem() {
     memset(regFile, 0, REG_NUMS*sizeof(regint_t));
     memset(DM, 0, MEM_SIZE*sizeof(memunit));
 
-    ifid = malloc(sizeof(IFIDReg)*2);
     ifid[PSWR].ir = NOOP;
     ifid[PSRD].ir = NOOP;
-    idex = malloc(sizeof(IDEXReg)*2);
     idex[PSWR].ir = NOOP;
     idex[PSRD].ir = NOOP;
-    exmem = malloc(sizeof(EXMEMReg)*2);
     exmem[PSWR].ir = NOOP;
     exmem[PSRD].ir = NOOP;
-    memwb = malloc(sizeof(MEMWBReg)*2);
     memwb[PSWR].ir = NOOP;
     memwb[PSRD].ir = NOOP;
 
