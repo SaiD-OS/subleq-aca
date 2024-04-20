@@ -19,7 +19,9 @@ RM = rmdir
 MK = mkdir
 
 #Flags
-CFLAGS = $(addprefix -I , $(MINGW_GCC_INCLUDE_DIR))
+WFLAGS = -Wall -Wextra -Werror -Wshadow 
+DFLAGS = -Og -g
+CFLAGS = $(addprefix -I , $(MINGW_GCC_INCLUDE_DIR)) $(WFLAGS) $(DFLAGS)
 LDFLAGS = $(addprefix -L , $(MINGW_GCC_LIB_DIR))
 
 #Files

@@ -64,12 +64,12 @@ void writeDMM(uregint_t addr, int data, bool memwrite) {
 	}		
 }
 
-uregint_t incrementPC(uregint_t pc) {
-    return pc + INCVAL;
+uregint_t incrementPC(uregint_t pc_var) {
+    return pc_var + INCVAL;
 }
 
-regint_t addBranchAddr(regint_t pc, regint_t branchAddr) {
-    return pc + branchAddr;
+regint_t addBranchAddr(regint_t pc_var, regint_t branchAddr) {
+    return pc_var + branchAddr;
 }
 
 regint_t signExtn(immregint_t offset) {
@@ -99,7 +99,7 @@ void generateAluControl(uint8_t aluop, uint8_t funct, uint8_t *alucontrol) {
 }
 
 regint_t alu(regint_t op1, regint_t op2, uint8_t alucontrol, uint8_t *control) {
-    regint_t aluOut;
+    regint_t aluOut = 0;
     if(alucontrol==0)
         aluOut = op1 & op2;
     else if(alucontrol==1)
@@ -122,10 +122,10 @@ regint_t alu(regint_t op1, regint_t op2, uint8_t alucontrol, uint8_t *control) {
     return aluOut;    
 }
 
-void writeIFIDStageReg(uregint_t ir, uregint_t pc, bool regWrite) {
+void writeIFIDStageReg(uregint_t ir, uregint_t pc_var, bool regWrite) {
     if(regWrite) {
         ifid[PSWR].ir = ir;
-        ifid[PSWR].pc = pc;
+        ifid[PSWR].pc = pc_var;
     }
 }
 
@@ -134,7 +134,7 @@ void readIFIDStageReg(uregint_t *out_ir, uregint_t *out_pc) {
     *out_pc = ifid[PSRD].pc;
 }
 
-void writeIDEXStageReg(uregint_t ir, regint_t regRs, regint_t regRt, regint_t signext, uint8_t control, uint8_t aluop, uint8_t rt, uint8_t rd, uregint_t pc, bool regWrite) {
+void writeIDEXStageReg(uregint_t ir, regint_t regRs, regint_t regRt, regint_t signext, uint8_t control, uint8_t aluop, uint8_t rt, uint8_t rd, uregint_t pc_var, bool regWrite) {
     if(regWrite) {
         idex[PSWR].ir = ir;
         idex[PSWR].regRs = regRs;
@@ -144,7 +144,7 @@ void writeIDEXStageReg(uregint_t ir, regint_t regRs, regint_t regRt, regint_t si
         idex[PSWR].aluop = aluop;
         idex[PSWR].rt = rt;
         idex[PSWR].rd = rd;
-        idex[PSWR].pc = pc;
+        idex[PSWR].pc = pc_var;
     }
 }
 
@@ -319,7 +319,6 @@ void instrdecode() {
         uint8_t rs = (ifid_ir >> 21) & RSM;
         uint8_t rt = (ifid_ir >> 16) & RTM;
         uint8_t rd = (ifid_ir >> 11) & RDM;
-        uint8_t sa = (ifid_ir >> 6) & SHAMTM;
         uint8_t funct = ifid_ir & FUNCTM;
         immregint_t imm = ifid_ir & IMMEDM;
         uint8_t control, aluop;
@@ -403,10 +402,10 @@ void writeback() {
     uint8_t memwb_control, memwb_destreg;
     readMEMWBStageReg(&memwb_ir, &memwb_control, &memwb_memdata, &memwb_aluout, &memwb_destreg);
     if(memwb_ir != NOOP) {
-        regint_t result = memwb_aluout;
+        regint_t result_var = memwb_aluout;
         if(isSignal(memwb_control, MEMTOREGM))
-            result = memwb_memdata;
-        writeRegfile(memwb_destreg, result, isSignal(memwb_control, REGWRITEM));
+            result_var = memwb_memdata;
+        writeRegfile(memwb_destreg, result_var, isSignal(memwb_control, REGWRITEM));
         logdebug(memwb_ir, pc, regFile, stage, ifid, idex, exmem, memwb);
     }
 }
