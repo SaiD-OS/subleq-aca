@@ -30,7 +30,7 @@ void instructioninfo(uregint_t ir, regint_t *rf, char *stage) {
         uint8_t opcode = ir >> 26;        
         uint8_t rs = (ir >> 21) & RSM;        
         uint8_t rt = (ir >> 16) & RTM;
-        printf("Instruction Info::%s::\n, opcode: %d, rs: %d, rt: %d, ", stage, opcode, rs, rt);
+        printf("Instruction Info::%s::\nopcode: %d, rs: %d, rt: %d, ", stage, opcode, rs, rt);
         if(opcode == R_OP) {
             uint8_t rd = (ir >> 11) & RDM;
             uint8_t funct = ir & FUNCTM;
