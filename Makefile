@@ -1,3 +1,7 @@
+#Variables
+BVAL=0
+AVAL=1
+
 #Directories
 MINGW_GCC_DIR = C:/MinGW
 MINGW_GCC_BIN_DIR = $(MINGW_GCC_DIR)/bin
@@ -8,7 +12,6 @@ BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/obj
 BIN_DIR = $(BUILD_DIR)/bin
 
-LOGGER = monitor
 ARCH = architecture
 CONFIG = config
 BENCHMARKS = benchmarks
@@ -19,19 +22,19 @@ RM = rmdir
 MK = mkdir
 
 #Flags
-WFLAGS = -Wall -Wextra -Werror -Wshadow 
+# WFLAGS = -Wall -Wextra -Werror -Wshadow 
 DFLAGS = -Og -g
 CFLAGS = $(addprefix -I , $(MINGW_GCC_INCLUDE_DIR)) $(WFLAGS) $(DFLAGS)
 LDFLAGS = $(addprefix -L , $(MINGW_GCC_LIB_DIR))
+BENCHMARKFLAGS = -D BENCHMARK=$(BVAL)
+ARCHFLAGS = -D ARCH=$(AVAL)
 
 #Files
 TARGET = $(BIN_DIR)/subleq.exe
 
-SOURCES_WITH_HEADERS = $(ARCH)\arch.c \
-						$(LOGGER)\monitor.c 
+SOURCES_WITH_HEADERS = $(ARCH)\arch.c
 						
-SOURCES = $(ARCH)\entrypoint.c \
-			$(SOURCES_WITH_HEADERS)
+SOURCES = $(SOURCES_WITH_HEADERS)
 
 BENCHMARKS_HEADERS = $(BENCHMARKS)/fibo.h
 CONFIG_HEADERS= $(CONFIG)/config.h
@@ -44,11 +47,11 @@ STRUCTURE_DIRS = $(sort $(subst /,\,$(dir $(OBJECTS)))) $(subst /,\,$(BIN_DIR))
 
 #Linking
 $(TARGET): $(OBJECTS) $(HEADERS)
-	$(GNUCC) $(LDFLAGS) -o $@ $^
+	$(GNUCC) $(LDFLAGS) $(BENCHMARKFLAGS) $(ARCHFLAGS) -o $@ $^
 
 #Compiling
 $(OBJ_DIR)/%.o: %.c
-	$(GNUCC) $(CFLAGS) -c -o $@ $^
+	$(GNUCC) $(CFLAGS) $(BENCHMARKFLAGS) $(ARCHFLAGS) -c -o $@ $^
 
 #Phony
 .PHONY: all clean dir run
