@@ -36,6 +36,8 @@
     #include "../benchmarks/bubblesort.h"
 #elif BENCHMARK == 16
     #include "../benchmarks/matrixmul.h"
+#elif BENCHMARK == 17
+    #include "../benchmarks/shiftcompare.h"
 #else
     #include "../benchmarks/fibo.h"
 #endif

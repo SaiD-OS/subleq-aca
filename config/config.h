@@ -22,7 +22,8 @@
 // 4 - Subleq + Reversal Subleq
 // 5 - MIPS
 // Configuration is done via make
-// #define ARCH 5
+// Comment Arch if using make
+#define ARCH 1
 
 #define SUBLEQB 1
 #define SUBLEQM 2
@@ -61,6 +62,7 @@ typedef uint8_t memunit;
 
 //load particular benchmark code i.e. instruction memory
 //Now defined in make file - uncomment for manual build and run scenarios
-// #define BENCHMARK 16
+//Comment benchmark if using make
+#define BENCHMARK 15
 
 #endif

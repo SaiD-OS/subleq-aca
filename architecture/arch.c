@@ -198,8 +198,8 @@ regint_t alu(regint_t op1, regint_t op2, uint8_t alucontrol, uint16_t *control) 
     regint_t lui_out = u_op2 << 16;
     regint_t sub_out = op1 - (((*control & UNSIGNEDM) != 0) ? u_op2 : op2);
     regint_t slt_out = (op1 < (((*control & UNSIGNEDM) != 0) ? u_op2 : op2)) ? 0x1 : 0x0;
-    regint_t sl_out = u_op2 << op1;
-    regint_t sr_out = u_op2 >> op1;
+    regint_t sl_out = u_op2 << (op1 & 0x1F);
+    regint_t sr_out = u_op2 >> (op1 & 0x1F);
     regint_t divmultop2 = (((*control & UNSIGNEDM) != 0) ? u_op2 : op2);
     regint_t hidiv_out = op1 % ((divmultop2 == 0) ? 0x1: divmultop2);
     regint_t lodiv_out = op1 / ((divmultop2 == 0) ? 0x1: divmultop2);
@@ -491,10 +491,13 @@ void mipsexecution() {
 
         //Subleq execution
         #if (ARCH == SUBLEQREV) | (ARCH == SUBLEQM) | (ARCH == SUBLEQRS) | (ARCH == SUBLEQB)
-        #if (ARCH == SUBLEQREV)
         bool isbitreversal = false, isnegative = (ex_op2 < 0);
+        if(ex_executesubleqroutine == SUBROUT_SL_START || ex_executesubleqroutine == SUBROUT_SR_START){
+            ex_regRs &= 0x1F;
+        }
+        #if (ARCH == SUBLEQREV)        
         if(ex_executesubleqroutine == SUBROUT_SL_START){
-            regint_t revshiftamt = ex_regRs, bitrev = ex_op2;
+            uregint_t revshiftamt = (uregint_t) ex_regRs, bitrev = (uregint_t) ex_op2;
             if(ex_regRs > 16) {
                 revshiftamt = 32 - ex_regRs;
                 ex_executesubleqroutine = SUBROUT_SR_START;
@@ -504,7 +507,7 @@ void mipsexecution() {
             store_value((SUBROUT_MEM_OFFSET + SUBROUT_SRC1) << 2, bitrev, (ex_executesubleqroutine != 0x0));
             store_value((SUBROUT_MEM_OFFSET + SUBROUT_SRC2) << 2, revshiftamt, (ex_executesubleqroutine != 0x0));
         } else if (ex_executesubleqroutine == SUBROUT_SR_START) {
-            regint_t revshiftamt = ex_regRs, bitrev = ex_op2;
+            uregint_t revshiftamt = (uregint_t) ex_regRs, bitrev = (uregint_t) ex_op2;
             if(ex_regRs > 16) {
                 revshiftamt = 32 - ex_regRs;
                 ex_executesubleqroutine = SUBROUT_SL_START;
@@ -734,6 +737,12 @@ void mipsexecution() {
 }
 
 int main(void) {
+    #if BENCHMARK == 15
+    for (int i = 0; i < 10; i++) {
+        int data = get_value(16384+(4*i), true);
+		printf("%d, ", data);
+	} 
+    #endif
     mipsexecution();
 
     #ifdef PROFILE

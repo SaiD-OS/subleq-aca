@@ -17,9 +17,26 @@ The benchmark to be run can be set by configuring the BENCHMARK variable in conf
 
 To build the project run the following command
 ```
-gcc -o {{executablefilename}}.exe|sh .\architecture\arch.c .\monitor\monitor.c
+gcc -o {{executablefilename}}.exe|sh .\architecture\arch.c
 ```
 To run the final code execute the following command
 ```
-{{executablefilename}}.exe|sh
+{{executablefilename}}.exe
 ```
+
+To build using make, first comment the defined ARCH and BENCHMARK variable in config.h and run following commands
+```
+make clean
+make dir
+make all -e AVAL=<Architecture type> -e BVAL=<Benchmark type>
+make run
+```
+
+Architecture type
+1 - Base Subleq
+2 - Subleq + Mul
+3 - Subleq + Right Shift
+4 - Subleq + Reversal Subleq
+5 - MIPS
+
+Benchmark type - A number from 0 to 17
